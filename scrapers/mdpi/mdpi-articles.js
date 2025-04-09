@@ -18,10 +18,10 @@ export const mdpiArticles = async (page) => {
     let publicationUpdates = await processItems(publications.slice(1, 2), async (publication) => {
         let volumes = await api.getVolumes(publication.id);
         
-        let enrichedVolumes = await processItems(volumes.slice(14, 15), async (volume) => {
+        await processItems(volumes.slice(14, 15), async (volume) => {
             let issues = await api.getIssues(publication.id, volume.number);
 
-            let enrichedIssues = await processItems(issues.slice(1,2), async (issue) => {
+            await processItems(issues.slice(1,2), async (issue) => {
                 const url = `${process.env.BASE_URL_MDPI}/${publication.issn}/${volume.number}/${issue.name}`;
                 if (!(await navigateToPage(page, url))) return null;
                 const articleUrls = await data.extractArticleUrls(page);

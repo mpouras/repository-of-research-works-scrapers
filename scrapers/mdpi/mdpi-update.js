@@ -9,7 +9,7 @@ import fs from 'fs';
 export const mdpiUpdate = async (page) => {
     const scraperName = 'mdpi';
 
-    // await mdpiJournalsList(page);
+    await mdpiJournalsList(page);
   
     const recent = await api.getRecent(scraperName);
 
