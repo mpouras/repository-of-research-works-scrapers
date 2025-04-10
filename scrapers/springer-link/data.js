@@ -103,7 +103,7 @@ async function extractArticleUrls(page) {
                 const citationElement = articleElement.querySelector('.app-card-open__meta .c-meta__type');
                 const citation = citationElement?.innerText.trim().toLowerCase();
 
-                if (!citationType.some(type => citation.includes(type))) {
+                if (citation === 'Editorial') {
                     return null;
                 }
 

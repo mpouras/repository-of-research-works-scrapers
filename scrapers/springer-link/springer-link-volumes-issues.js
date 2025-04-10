@@ -18,7 +18,7 @@ export const springerPublicationsVolumesIssues = async (page) => {
     const defaultDomain = ["link.springer.com", "www.springer.com"];
     const secondaryDomain = ["springeropen.com"];
 
-    let publicationUpdates = await processItems(publications.slice(0,1), async (publication) => {
+    let publicationUpdates = await processItems(publications.slice(0,3), async (publication) => {
         if (defaultDomain.some(substring => publication.link.includes(substring))) {
             const { updates } = await fetchPublicationVolumesAndIssues(page, publication);
 
@@ -38,7 +38,7 @@ async function fetchPublicationVolumesAndIssues(page, publication) {
 
         const issn = await data.extractIssn(page);
         const { volumesAndIssues, year_published } = await navigateToVolumesAndIssues(page, publication);
-        
+
         return {
             updates: { 
                 id: publication.id,

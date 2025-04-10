@@ -18,17 +18,19 @@ export const springerArticlesList = async (page) => {
     let publicationUpdates = await processItems(publications.slice(0,1), async (publication) => {
         let volumes = await api.getVolumes(publication.id);
         
-        await processItems(volumes, async (volume) => {
+        await processItems(volumes.slice(14,15), async (volume) => {
             let issues = await api.getIssues(publication.id, volume.number);
 
-            await processItems(issues, async (issue) => {
+            await processItems(issues.slice(4,5), async (issue) => {
                 const url = `${publication.link}/volumes-and-issues/${volume.number}-${issue.name}`;
                 if (!(await navigateToPage(page, url))) return null;
+                await utils.handleCookieDialog(page);
+                
                 const articleUrls = await data.extractArticleUrls(page);
 
                 let articles = await processItems(articleUrls, async (articleUrl) => {
                     if (!(await navigateToPage(page, articleUrl))) return null;
-                    // await utils.handleCookieDialog(page);
+                    await utils.handleCookieDialog(page);
 
                     const article = await data.extractArticle(page, articleUrl);
                     return article;

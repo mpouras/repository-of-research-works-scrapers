@@ -28,7 +28,8 @@ export const mdpiUpdate = async (page) => {
         };
     });
 
-    fs.writeFileSync('publication-updates.json', JSON.stringify(publicationUpdates));
+    // fs.writeFileSync('publication-updates.json', JSON.stringify(publicationUpdates));
+    if (publicationUpdates.length) await api.updatePublications(publicationUpdates);
 };
 
 async function handleVolumeUpdate(existingVolume, newVolumes, publication, page) {

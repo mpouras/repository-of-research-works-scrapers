@@ -1,10 +1,16 @@
+let cookieDialogHandled = false;
 
 async function handleCookieDialog(page) {
+    if (cookieDialogHandled) return;
+
     try {
         await page.waitForSelector('.cc-banner__content', { timeout: 5000 });
         await page.click('.cc-banner__button-reject');
+        cookieDialogHandled = true;
+        console.log("Cookie dialog handled successfully.");
     } catch (error) {
         console.log("Cookie dialog not found or already handled.");
+        cookieDialogHandled = true;
     }
 }
 
