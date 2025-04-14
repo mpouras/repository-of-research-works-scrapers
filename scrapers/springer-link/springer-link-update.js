@@ -12,7 +12,7 @@ export const springerUpdate = async (page) => {
 
     const recent = await api.getRecent(scraperName);
 
-    let publicationUpdates = await processItems(recent.slice(0, 1), async (publication) => {
+    let publicationUpdates = await processItems(recent, async (publication) => {
         const { volumesAndIssues } = await navigateToVolumesAndIssues(page, publication);
         const existingVolume = publication.recent_volume;
         const existingIssue = publication.recent_issue;
@@ -31,8 +31,8 @@ export const springerUpdate = async (page) => {
         };
     });
 
-    // fs.writeFileSync('publication-updates.json', JSON.stringify(publicationUpdates));
-    if (publicationUpdates.length) await api.updatePublications(publicationUpdates);
+    fs.writeFileSync('publication-updates.json', JSON.stringify(publicationUpdates));
+    // if (publicationUpdates.length) await api.updatePublications(publicationUpdates);
 };
 
 async function navigateToVolumesAndIssues(page, publication) {

@@ -13,7 +13,7 @@ export const mdpiUpdate = async (page) => {
   
     const recent = await api.getRecent(scraperName);
 
-    let publicationUpdates = await processItems(recent.slice(0, 1), async (publication) => {
+    let publicationUpdates = await processItems(recent, async (publication) => {
         const publicationData = await fetchPublicationAndVolumes(page, publication);
         const existingVolume = publication.recent_volume;
         const newVolumes = existingVolume 
@@ -28,8 +28,8 @@ export const mdpiUpdate = async (page) => {
         };
     });
 
-    // fs.writeFileSync('publication-updates.json', JSON.stringify(publicationUpdates));
-    if (publicationUpdates.length) await api.updatePublications(publicationUpdates);
+    fs.writeFileSync('publication-updates.json', JSON.stringify(publicationUpdates));
+    // if (publicationUpdates.length) await api.updatePublications(publicationUpdates);
 };
 
 async function handleVolumeUpdate(existingVolume, newVolumes, publication, page) {
@@ -43,7 +43,7 @@ async function handleVolumeUpdate(existingVolume, newVolumes, publication, page)
             const issues = await handleIssueUpdate(page, publication, volume, articleId);
 
             return {
-                name: volume.number,
+                number: volume.number,
                 year_published: volume.year_published,
                 issues
             };
