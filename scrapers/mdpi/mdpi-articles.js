@@ -15,7 +15,7 @@ export const mdpiArticles = async (page) => {
         return;
     }
 
-    let publicationUpdates = await processItems(publications.slice(4,30), async (publication) => {
+    let publicationUpdates = await processItems(publications.slice(55,74), async (publication) => {
         let volumes = await api.getVolumes(publication.id);
         
         await processItems(volumes, async (volume) => {
@@ -33,8 +33,9 @@ export const mdpiArticles = async (page) => {
                     if (notFound) return null;
 
                     return article;
-                });
+                }, 1500);
 
+                // fs.writeFileSync('publication-updates.json', JSON.stringify(articles));
                 await api.storeArticles(articles, publication.id, volume.number, issue.name);
             });
         });

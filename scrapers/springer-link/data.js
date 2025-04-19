@@ -131,9 +131,9 @@ async function extractArticle(page, url) {
             const pdfElement = document.querySelector('.c-pdf-container a');
 
             const title = titleElement.innerText.trim();
-            const description = descriptionElement.innerText.trim();
+            const description = descriptionElement.innerText.trim() || null;
 
-            const date = dateElement.innerText.trim();
+            const date = dateElement.innerText.trim() || null;
             const published_date = new Date(date).toLocaleDateString('en-GB').replace(/\//g, '-');
 
             const doi = doiElement.innerText.trim();
@@ -142,7 +142,7 @@ async function extractArticle(page, url) {
             const authorElements = document.querySelectorAll('.c-article-author-list__item');
             const authors = Array.from(authorElements).map(author => {
                 const name = author.querySelector('a[data-test="author-name"]').innerText.trim();
-                const university = document.querySelector('.c-article-author-affiliation__address').innerText.trim();
+                const university = document.querySelector('.c-article-author-affiliation__address')?.innerText.trim();
                 const profile_link = `${scraperLink}/search?dc.creator=${encodeURIComponent(name)}`;
                 const orcid_link = author.querySelector('.js-orcid')?.href;
 
@@ -161,7 +161,7 @@ async function extractArticle(page, url) {
         return article;
     } catch (error) {
         console.error('Error navigating to articles list:', error.message);
-        return [];
+        return null;
     }
 }
 

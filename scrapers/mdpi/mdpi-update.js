@@ -13,7 +13,7 @@ export const mdpiUpdate = async (page) => {
   
     const recent = await api.getRecent(scraperName);
 
-    let publicationUpdates = await processItems(recent, async (publication) => {
+    let publicationUpdates = await processItems(recent.slice(0,20), async (publication) => {
         const publicationData = await fetchPublicationAndVolumes(page, publication);
         const existingVolume = publication.recent_volume;
         const newVolumes = existingVolume 
@@ -29,7 +29,6 @@ export const mdpiUpdate = async (page) => {
     });
 
     fs.writeFileSync(`./data/mdpi-updates-${new Date().toISOString().split('T')[0]}.json`, JSON.stringify(publicationUpdates));
-    // if (publicationUpdates.length) await api.updatePublications(publicationUpdates);
 };
 
 async function handleVolumeUpdate(existingVolume, newVolumes, publication, page) {

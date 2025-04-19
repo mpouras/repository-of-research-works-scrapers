@@ -18,7 +18,7 @@ export const springerPublicationsVolumesIssues = async (page) => {
     const defaultDomain = ["link.springer.com", "www.springer.com"];
     const secondaryDomain = ["springeropen.com"];
 
-    let publicationUpdates = await processItems(publications.slice(0,3), async (publication) => {
+    let publicationUpdates = await processItems(publications, async (publication) => {
         if (defaultDomain.some(substring => publication.link.includes(substring))) {
             const { updates } = await fetchPublicationVolumesAndIssues(page, publication);
 
@@ -26,8 +26,18 @@ export const springerPublicationsVolumesIssues = async (page) => {
         }
     });
 
-    if (publicationUpdates.length) await api.updatePublications(publicationUpdates);
-
+    if (publicationUpdates.length) {
+        const batchSize = 50;
+        for (let i = 0; i < publicationUpdates.length; i += batchSize) {
+            const batch = publicationUpdates.slice(i, i + batchSize);
+            await api.updatePublications(batch);
+            console.log(`Updated batch from ${i + 1} to ${i + batchSize}`);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+        console.log('All publication updates completed.');
+    } else {
+        console.log('No updates to process.');
+    }
 };
 
 async function fetchPublicationVolumesAndIssues(page, publication) {
@@ -35,6 +45,8 @@ async function fetchPublicationVolumesAndIssues(page, publication) {
     try {
         if (!(await navigateToPage(page, url ))) return {};
         await utils.handleCookieDialog(page);
+
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
         const issn = await data.extractIssn(page);
         const { volumesAndIssues, year_published } = await navigateToVolumesAndIssues(page, publication);

@@ -3,6 +3,7 @@ import '../../config.js';
 import utils from './utils.js';
 import { processItems, navigateToPage } from "../utils.js";
 import data from "./data.js";
+import fs from 'fs';
 
 export const springerArticlesList = async (page) => {
     console.log("Fetching articles for Springer...");
@@ -15,14 +16,15 @@ export const springerArticlesList = async (page) => {
         return;
     }
 
-    let publicationUpdates = await processItems(publications.slice(0,1), async (publication) => {
+    let publicationUpdates = await processItems(publications.slice(14,50), async (publication) => {
         let volumes = await api.getVolumes(publication.id);
         
-        await processItems(volumes.slice(14,15), async (volume) => {
+        await processItems(volumes, async (volume) => {
             let issues = await api.getIssues(publication.id, volume.number);
 
-            await processItems(issues.slice(4,5), async (issue) => {
-                const url = `${publication.link}/volumes-and-issues/${volume.number}-${issue.name}`;
+            await processItems(issues, async (issue) => {
+                const issueName = issue.name.split('-')[0];
+                const url = `${publication.link}/volumes-and-issues/${volume.number}-${issueName}`;
                 if (!(await navigateToPage(page, url))) return null;
                 await utils.handleCookieDialog(page);
                 
@@ -36,6 +38,7 @@ export const springerArticlesList = async (page) => {
                     return article;
                 });
 
+                // fs.writeFileSync('publication-updates.json', JSON.stringify(articles));
                 await api.storeArticles(articles, publication.id, volume.number, issue.name);
             });
         });

@@ -31,12 +31,14 @@ async function getVolumes(publicationId) {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error getPublicationVolumes status: ${response.status}`);
+            console.warn(`Skipping publication with id: ${publicationId}: no volumes found (status ${response.status})`);
+            return [];
         }
 
         return await response.json();
     } catch (error) {
         console.error('Error fetching entry:', error.message);
+        return [];
     }
 }
 

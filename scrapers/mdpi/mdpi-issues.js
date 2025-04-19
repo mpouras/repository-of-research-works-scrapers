@@ -32,8 +32,6 @@ export const mdpiIssues = async (page) => {
             volumes: issueUpdates 
         };
     });
-
-    // fs.writeFileSync('mdpi-issues.json', JSON.stringify(publicationUpdates));
     
     if (publicationUpdates.length) await api.updatePublications(publicationUpdates);
 }
