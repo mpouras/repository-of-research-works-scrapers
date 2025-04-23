@@ -1,6 +1,7 @@
 import api from "../../api.js";
 import { navigateToPage } from "../utils.js";
 import data from "./data.js"
+import fs from 'fs';
 
 export const mdpiJournalsList = async (page) => {
     const url = `${process.env.BASE_URL_MDPI}/subject/computer-math`;
@@ -8,5 +9,6 @@ export const mdpiJournalsList = async (page) => {
 
     const publications = await data.extractPublications(page);
     
-    await api.storePublications(publications);
+    // await api.storePublications(publications);
+    console.log(publications);
 };

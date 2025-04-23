@@ -1,11 +1,39 @@
-name: Hello World
+name: MDPI Update
 
-on: [push]
+on: 
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
-  say-hello:
+  update-mdpi:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Run Hello World in Node.js
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright dependencies
+        run: npx playwright install --with-deps
+
+      - name: Create .env file with secrets
         run: |
-          node -e "console.log('Hello world')"
+          echo "BASE_URL_MDPI=https://www.mdpi.com" >> .env
+
+      - name: Create data directory if not exists
+        run: |
+          mkdir -p ./data
+
+      - name: Run MDPI update script
+        run: node index.js mdpi_journals_list
