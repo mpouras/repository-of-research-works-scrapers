@@ -16,7 +16,7 @@ export const springerArticlesList = async (page) => {
         return;
     }
 
-    let publicationUpdates = await processItems(publications.slice(14,50), async (publication) => {
+    let publicationUpdates = await processItems(publications, async (publication) => {
         let volumes = await api.getVolumes(publication.id);
         
         await processItems(volumes, async (volume) => {

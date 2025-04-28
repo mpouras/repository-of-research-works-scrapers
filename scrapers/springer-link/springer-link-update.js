@@ -31,8 +31,8 @@ export const springerUpdate = async (page) => {
         };
     });
 
-    fs.writeFileSync(`./data/springer-updates-${new Date().toISOString().split('T')[0]}.json`, JSON.stringify(publicationUpdates));
-    // if (publicationUpdates.length) await api.updatePublications(publicationUpdates);
+    // fs.writeFileSync(`./data/springer-updates-${new Date().toISOString().split('T')[0]}.json`, JSON.stringify(publicationUpdates));
+    if (publicationUpdates.length) await api.updatePublications(publicationUpdates);
 };
 
 async function navigateToVolumesAndIssues(page, publication) {
